@@ -6,9 +6,10 @@
   <title>Contact</title>
   <link rel="stylesheet" href="css/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
 </head>
 <body>
-  <header>
+  <header data-aos="fade-down">
     <h1>Contact</h1>
     <nav>
       <a href="index.html">Home</a>
@@ -18,7 +19,7 @@
   </header>
 
   <main>
-    <section>
+    <section data-aos="fade-up">
       <h2>Get in Touch</h2>
       <p><strong>Email:</strong> aachaaymane@gmail.com</p>
       <p><strong>Phone:</strong> +44 790 2366407</p>
@@ -26,8 +27,11 @@
     </section>
   </main>
 
-  <footer>
+  <footer data-aos="fade-up">
     <p>&copy; 2025 Aymane Aacha. All rights reserved.</p>
   </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>AOS.init();</script>
 </body>
 </html>
