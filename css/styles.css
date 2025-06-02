@@ -78,3 +78,53 @@ footer {
   font-size: 0.9rem;
   color: #888;
 }
+
+.btn {
+  display: inline-block;
+  background-color: var(--accent-color);
+  color: #fff;
+  padding: 0.6em 1.2em;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--link-hover);
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem 0;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.carousel span {
+  flex: 0 0 auto;
+  background: var(--card-bg);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  scroll-snap-align: start;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.social-icons a {
+  display: inline-block;
+  margin: 0.5rem;
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: var(--accent-color);
+  transition: transform 0.2s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.1);
+  color: var(--link-hover);
+}
