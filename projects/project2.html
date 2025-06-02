@@ -3,23 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Example Projects 2</title>
+  <title>KNIME EDA - Medical Dataset</title>
   <link rel="stylesheet" href="../css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>Aymane Aacha</h1>
+  <header data-aos="fade-down">
+    <h1>Medical Dataset EDA using KNIME</h1>
     <nav>
       <a href="../index.html">Home</a>
-      <a href="../contact.html">Contact</a>
       <a href="../projects.html">Projects</a>
+      <a href="../contact.html">Contact</a>
     </nav>
   </header>
+
   <main>
-    <h2>Example Project 2</h2>
-    <p><strong>Tools:</strong> Python, scikit-learn, matplotlib</p>
-    <p>Analyzed Airbnb listings to model pricing using regression algorithms...</p>
-    <a href="https://github.com/yourusername/airbnb-pricing">View on GitHub</a>
+    <section data-aos="fade-up">
+      <h2>Overview</h2>
+      <p>This project involved using the KNIME platform to conduct exploratory data analysis (EDA) and data preprocessing on a medical dataset containing patient records related to heart disease. The focus was on ethical data cleaning, ensuring statistical integrity, and preparing the dataset for future predictive analysis.</p>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Key Actions</h2>
+      <ul>
+        <li>Imported and renamed columns using KNIME nodes (CSV Reader, Column Renamer).</li>
+        <li>Identified attributes with significant missing data: <code>slope</code> (33.6%), <code>ca</code> (66.4%), and <code>thal</code> (52.8%).</li>
+        <li>Removed columns and rows with excessive missing values due to ethical concerns around imputation in medical data.</li>
+        <li>Eliminated impossible values such as cholesterol and blood pressure readings of 0.</li>
+        <li>Retained numerical outliers to avoid potential statistical bias (e.g., type I errors).</li>
+        <li>Confirmed all remaining records were unique using Duplicate Row Filter node.</li>
+      </ul>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Conclusions</h2>
+      <p>After careful evaluation and cleaning using KNIME workflows, the dataset was reduced from 920 to 661 records, but the data integrity was preserved. This thorough preprocessing ensured the dataset is well-suited for further analysis or model development, especially important in sensitive domains like healthcare.</p>
+    </section>
+
+    <section data-aos="zoom-in">
+      <h2>Full Report</h2>
+      <p><a href="../KNIMEEDA.pdf" target="_blank">View Full PDF Report</a></p>
+    </section>
   </main>
+
+  <footer data-aos="fade-up">
+    <p>&copy; 2025 Aymane Aacha. All rights reserved.</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>AOS.init();</script>
 </body>
 </html>

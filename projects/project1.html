@@ -6,9 +6,10 @@
   <title>Metro Bike Share EDA</title>
   <link rel="stylesheet" href="../css/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
 </head>
 <body>
-  <header>
+  <header data-aos="fade-down">
     <h1>EDA of Los Angeles Metro Bike Share Dataset</h1>
     <nav>
       <a href="../index.html">Home</a>
@@ -18,12 +19,12 @@
   </header>
 
   <main>
-    <section>
+    <section data-aos="fade-up">
       <h2>Overview</h2>
       <p>Exploratory Data Analysis (EDA) was performed on a dataset containing 92,124 anonymized bicycle trip records from the Los Angeles Metro Bike Share program. The goal was to clean, validate, and prepare the dataset for future modeling or deeper analysis.</p>
     </section>
 
-    <section>
+    <section data-aos="fade-up">
       <h2>Key Insights</h2>
       <ul>
         <li>Dataset had 4 columns with missing values (coordinates); 5.8% of rows were dropped.</li>
@@ -35,19 +36,22 @@
       </ul>
     </section>
 
-    <section>
+    <section data-aos="fade-up">
       <h2>Conclusion</h2>
       <p>The dataset was successfully cleaned, structured, and is now ready for predictive modeling or time-series trend analysis. Key steps included resolving datatypes, handling missing values, and removing irrelevant or incorrect data entries.</p>
     </section>
 
-    <section>
+    <section data-aos="zoom-in">
       <h2>View the Full Notebook</h2>
       <p><a href="../BikesEDA.html" target="_blank">Open full EDA with visualizations</a></p>
     </section>
   </main>
 
-  <footer>
+  <footer data-aos="fade-up">
     <p>&copy; 2025 Aymane Aacha. All rights reserved.</p>
   </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>AOS.init();</script>
 </body>
 </html>
