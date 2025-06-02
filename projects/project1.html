@@ -3,23 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Churn Prediction</title>
+  <title>Metro Bike Share EDA</title>
   <link rel="stylesheet" href="../css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
-    <h1>Aymane Aacha</h1>
+    <h1>EDA of Los Angeles Metro Bike Share Dataset</h1>
     <nav>
       <a href="../index.html">Home</a>
-      <a href="../contact.html">Contact</a>
       <a href="../projects.html">Projects</a>
+      <a href="../contact.html">Contact</a>
     </nav>
   </header>
+
   <main>
-    <h2>Example Project 1</h2>
-    <p><strong>Tools:</strong> Python, pandas, XGBoost, SHAP</p>
-    <p>This project involved predicting churn using customer demographic and usage data...</p>
-    <a href="https://github.com/yourusername/churn-model">View on GitHub</a>
+    <section>
+      <h2>Overview</h2>
+      <p>Exploratory Data Analysis (EDA) was performed on a dataset containing 92,124 anonymized bicycle trip records from the Los Angeles Metro Bike Share program. The goal was to clean, validate, and prepare the dataset for future modeling or deeper analysis.</p>
+    </section>
+
+    <section>
+      <h2>Key Insights</h2>
+      <ul>
+        <li>Dataset had 4 columns with missing values (coordinates); 5.8% of rows were dropped.</li>
+        <li>No duplicate records found.</li>
+        <li>Data types were corrected for <code>start_time</code>, <code>end_time</code>, and <code>bike_id</code>.</li>
+        <li>Outliers in <code>trip_duration</code> (up to 24 hours) were retained pending domain validation.</li>
+        <li>46 records with <em>Testing</em> as a passholder type were removed as invalid.</li>
+        <li>Label encoding was applied to <code>trip_route_category</code>, <code>passholder_type</code>, and <code>bike_type</code>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Conclusion</h2>
+      <p>The dataset was successfully cleaned, structured, and is now ready for predictive modeling or time-series trend analysis. Key steps included resolving datatypes, handling missing values, and removing irrelevant or incorrect data entries.</p>
+    </section>
+
+    <section>
+      <h2>View the Full Notebook</h2>
+      <p><a href="../BikesEDA.html" target="_blank">Open full EDA with visualizations</a></p>
+    </section>
   </main>
+
+  <footer>
+    <p>&copy; 2025 Aymane Aacha. All rights reserved.</p>
+  </footer>
 </body>
 </html>
