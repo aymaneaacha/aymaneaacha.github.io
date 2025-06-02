@@ -95,22 +95,34 @@ footer {
   background-color: var(--link-hover);
 }
 
-.carousel {
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  padding: 1rem 0;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
 }
 
-.carousel span {
+.auto-scroll {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  animation: scroll-left 40s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.auto-scroll span {
   flex: 0 0 auto;
   background: var(--card-bg);
   padding: 0.5rem 1rem;
   border-radius: 5px;
   box-shadow: var(--shadow);
-  scroll-snap-align: start;
   white-space: nowrap;
   font-weight: 600;
 }
