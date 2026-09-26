@@ -194,3 +194,7 @@ figcaption {
   color: #666;
   margin-top: 0.5rem;
 }
+
+.nowrap {
+  white-space: nowrap;
+}
