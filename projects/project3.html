@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parking Birmingham Occupancy Forecasting</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+  <header data-aos="fade-down">
+    <h1>Forecasting Car Park Occupancy in Birmingham</h1>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../projects.html">Projects</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section data-aos="fade-up">
+      <h2>Overview</h2>
+      <p>This project uses the UCI <em>Parking Birmingham</em> dataset: 35,717 occupancy readings from 30 car parks in Birmingham, UK, collected between October and December 2016. I cleaned the raw readings into a regular time series and then trained a model to forecast each car park's occupancy rate 30 minutes ahead during business hours.</p>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Data Cleaning</h2>
+      <ul>
+        <li>Removed 216 exact duplicate rows and parsed <code>LastUpdated</code> into real timestamps.</li>
+        <li>Found that readings arrived about every 33 minutes. The data showed this was a 30-minute polling schedule plus a small delay, so I resampled each car park onto a fixed 30-minute grid.</li>
+        <li>Limited the data to operating hours (8:00–16:30). Readings at 7:00 were 83% missing because the collection system was still starting up.</li>
+        <li>Dropped 2 unreliable car parks (<code>NIA North</code>, <code>BHMBRTARC01</code>). They had short histories, came from a separate collection pipeline, and accounted for all 12 negative occupancy readings.</li>
+        <li>Measured how long each gap in the data lasted before filling any. I used linear interpolation only for gaps of 2 hours or less and flagged every filled row with <code>was_imputed</code>. Longer gaps were left out rather than guessed at, which cut missing data from 33.4% to 7.5%.</li>
+        <li>Fixed 357 readings where occupancy was above 100%: the stated capacity of some car parks was too low, so I raised it to the highest occupancy actually observed.</li>
+      </ul>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Features</h2>
+      <p>The target is <code>OccupancyRate</code> (occupancy divided by capacity), so car parks of different sizes can share one model. Features include the hour, the day of the week, a weekend flag, the car park's ID and capacity, and the rate 30 minutes, 1 hour and 1 day earlier, plus a 2-hour rolling mean. The rolling mean is shifted by one step so a row's own value never leaks into its features.</p>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Model &amp; Results</h2>
+      <p>The last two full weeks (December 5–18) were held out for testing. The baseline predicts no change from 30 minutes earlier. I compared a single LightGBM model trained on all 28 car parks with XGBoost, and with a separate Prophet model for each car park.</p>
+      <div class="table-wrapper">
+        <table class="results-table">
+          <thead>
+            <tr><th>Model</th><th>MAE</th><th>RMSE</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Baseline (no change)</td><td>0.048</td><td>0.083</td></tr>
+            <tr class="highlight-row"><td>LightGBM (all car parks)</td><td>0.021</td><td>0.037</td></tr>
+            <tr><td>XGBoost (all car parks)</td><td>0.021</td><td>0.038</td></tr>
+            <tr><td>Prophet (one per car park)</td><td>0.076</td><td>&ndash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>LightGBM cut the baseline error by 56%. Prophet did worse than the baseline: with only about 2 months of history per car park, it couldn't reliably pick out daily and weekly patterns. Training one model on all car parks lets it learn from their shared patterns. A small hyperparameter sweep moved MAE by less than 0.0004, so the model is close to the limit of this feature set.</p>
+      <figure>
+        <a href="../images/parking-forecast-vs-actual.png" target="_blank"><img src="../images/parking-forecast-vs-actual.png" alt="Line chart of actual and predicted occupancy rate for car park BHMBRCBRG01 from December 5 to 19, 2016. The two lines follow the same daily rise and fall closely."></a>
+        <figcaption>Actual vs. predicted occupancy for the car park with the highest error. The straight diagonal segments are overnight periods with no readings.</figcaption>
+      </figure>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Key Findings</h2>
+      <ul>
+        <li>Error is lowest at midday (MAE about 0.011–0.015) and highest at 8:00 and 16:00, when occupancy rises or falls fastest.</li>
+        <li>Weekends are harder to predict than weekdays (Saturday MAE 0.027 vs. 0.015 on Wednesday).</li>
+        <li>The car parks with the highest error are the same ones with the capacity problems found during cleaning.</li>
+        <li>The residuals average almost zero (mean 0.003), so the model doesn't consistently predict too high or too low.</li>
+      </ul>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Limitations</h2>
+      <p>The model forecasts 30 minutes ahead during business hours (8:00–16:30) only. It hasn't been tested for longer horizons or overnight. It also tends to predict a slower decline than actually happens in the late afternoon.</p>
+    </section>
+
+    <section data-aos="zoom-in">
+      <h2>View the Full Notebook</h2>
+      <p><a href="../BirminghamParking.html" target="_blank">Open the full notebook with code and visualizations</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Aymane Aacha. All rights reserved.</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>AOS.init();</script>
+</body>
+</html>

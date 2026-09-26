@@ -140,3 +140,57 @@ footer {
   transform: scale(1.1);
   color: var(--link-hover);
 }
+
+/* Results tables and figures on project pages */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.results-table th,
+.results-table td {
+  padding: 0.6rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.results-table th {
+  font-weight: 600;
+  background-color: #f1f5f9;
+}
+
+.results-table tr:last-child td {
+  border-bottom: none;
+}
+
+.results-table .highlight-row td {
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+figure {
+  margin: 1.5rem 0;
+}
+
+figure img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  background-color: #fff;
+}
+
+figcaption {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
