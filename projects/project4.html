@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wheat Seeds Clustering &amp; Classification</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+  <header data-aos="fade-down">
+    <h1>Wheat Seeds: Clustering vs. Classification</h1>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../projects.html">Projects</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section data-aos="fade-up">
+      <h2>Overview</h2>
+      <p>This project uses the UCI <em>Seeds</em> dataset: 210 wheat kernels from three varieties, each described by seven measurements of its shape (area, perimeter, compactness, length, width, asymmetry and groove length). The project had two parts. First, I clustered a version of the data with the variety labels removed to see whether the groups could be found without them. Then I used the original labeled data to check how well each clustering method recovered the true varieties, and compared them with a supervised classifier.</p>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Exploration &amp; Preprocessing</h2>
+      <ul>
+        <li>The data had no missing values or duplicate rows. Most features were roughly normally distributed, but <code>asymmetry</code> was skewed and had the widest spread.</li>
+        <li>A correlation heatmap showed that the size features (<code>area</code>, <code>perimeter</code>, <code>length</code>, <code>width</code>) are strongly correlated, which motivated trying each method with and without PCA.</li>
+        <li>Removed 6 outliers with the IQR rule (210 to 204 rows) for K-means and GMM, which are sensitive to extreme points. DBSCAN used all 210 rows, since it labels outliers as noise by itself.</li>
+        <li>Standardized every feature with <code>StandardScaler</code>, because all three clustering methods are based on distances.</li>
+        <li>Built PCA versions that keep 95% of the variance (for K-means and GMM) and 2 components (for DBSCAN and for plotting).</li>
+      </ul>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Clustering Without Labels</h2>
+      <ul>
+        <li><strong>K-means:</strong> compared k = 2 to 9 using the elbow method and silhouette scores, with and without PCA.</li>
+        <li><strong>Gaussian Mixture Models:</strong> searched 1–10 components across four covariance types and picked the model with the lowest BIC. Without PCA, BIC chose 4 components (silhouette 0.29). With PCA, it chose 3 components, matching the true number of varieties (silhouette 0.41).</li>
+        <li><strong>DBSCAN:</strong> set <code>eps</code> from a k-distance plot. With and without PCA it found only one cluster, labeling 2–4% of the seeds as noise.</li>
+      </ul>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Results Against the True Labels</h2>
+      <p>The original UCI file includes the variety of each seed (70 per variety), so I refit each clustering method with 3 clusters and scored it against the true labels. I also trained a multinomial logistic regression and scored it with 5-fold cross-validated predictions over all 210 seeds. For clustering, accuracy is measured by assigning each cluster to the variety that most of its seeds belong to.</p>
+      <div class="table-wrapper">
+        <table class="results-table">
+          <thead>
+            <tr><th>Model</th><th>ARI</th><th>NMI</th><th>Accuracy</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight-row"><td>Logistic regression (supervised)</td><td>0.824</td><td>0.775</td><td>93.8%</td></tr>
+            <tr><td>K-means</td><td>0.773</td><td>0.728</td><td>91.9%</td></tr>
+            <tr><td>GMM</td><td>0.723</td><td>0.725</td><td>89.5%</td></tr>
+            <tr><td>K-means + PCA</td><td>0.714</td><td>0.678</td><td>89.5%</td></tr>
+            <tr><td>GMM + PCA</td><td>0.704</td><td>0.674</td><td>89.0%</td></tr>
+            <tr><td>DBSCAN + PCA</td><td>0.000</td><td>0.017</td><td>34.1%</td></tr>
+            <tr><td>DBSCAN</td><td>0.000</td><td>0.004</td><td>33.7%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure>
+        <a href="../images/seeds-clustering-evaluation.png" target="_blank"><img src="../images/seeds-clustering-evaluation.png" alt="Bar chart of ARI, NMI and mapped accuracy for six clustering models. K-means and GMM, with and without PCA, score between 0.67 and 0.92. Both DBSCAN models score near zero on ARI and NMI and about 0.34 on accuracy."></a>
+        <figcaption>Clustering scores against the true varieties. K-means and GMM recover most of the structure, and DBSCAN does not.</figcaption>
+      </figure>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Classification</h2>
+      <p>The logistic regression ran in a pipeline with feature scaling. I tuned the regularization strength <code>C</code> with a grid search and stratified 5-fold cross-validation, optimizing macro-F1 (best <code>C</code> = 5, cross-validated macro-F1 0.950). On a held-out test set of 53 seeds it reached <strong>94.3% accuracy</strong> and a macro-F1 of 0.943. Variety 2 was classified perfectly. The only mistakes were 3 seeds of variety 1 predicted as variety 3.</p>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Key Findings</h2>
+      <ul>
+        <li>The three varieties are well separated by kernel shape alone. Plain K-means put almost 92% of seeds with the right variety without ever seeing the labels.</li>
+        <li>PCA gave the GMM a better silhouette score and the right number of clusters, but it slightly lowered agreement with the true labels for both K-means and GMM.</li>
+        <li>DBSCAN is a poor fit here: the varieties sit close together without low-density gaps between them, so it merged everything into one cluster.</li>
+        <li>Variety 1 is the hardest to separate. Most errors, for both clustering and classification, involve variety 1 being confused with variety 2 or 3.</li>
+      </ul>
+    </section>
+
+    <section data-aos="fade-up">
+      <h2>Limitations</h2>
+      <p>The dataset is small (210 seeds, and a 53-seed test set), so a single misclassified seed moves accuracy by about 2 points. Accuracy for the clustering models uses the true labels to name each cluster, so it is an optimistic upper bound. DBSCAN was tested with a single heuristic for <code>eps</code>, so other settings might do better.</p>
+    </section>
+
+    <section data-aos="zoom-in">
+      <h2>View the Full Notebook</h2>
+      <p><a href="../SeedsModeling.html" target="_blank">Open the full notebook with code and visualizations</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Aymane Aacha. All rights reserved.</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>AOS.init();</script>
+</body>
+</html>

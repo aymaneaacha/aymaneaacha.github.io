@@ -198,3 +198,11 @@ figcaption {
 .nowrap {
   white-space: nowrap;
 }
+
+@media (max-width: 480px) {
+  .results-table th,
+  .results-table td {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
+  }
+}
